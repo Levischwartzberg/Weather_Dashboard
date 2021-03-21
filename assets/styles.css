@@ -1,3 +1,8 @@
 header {
     background-image: linear-gradient(#06813a, #0fb950);
 }
+
+.search {
+    background-color: #ebebeb;
+    padding: 20px;
+}
