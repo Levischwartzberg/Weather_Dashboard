@@ -6,3 +6,9 @@ header {
     background-color: #ebebeb;
     padding: 20px;
 }
+
+.currentCard {
+    border: #8f8f8f solid 1px;
+    background-color: #ebebeb;
+    padding: 10px;
+}

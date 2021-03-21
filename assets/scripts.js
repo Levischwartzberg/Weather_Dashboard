@@ -2,6 +2,7 @@ var containerEl = $(".container");
 var current = $(".current-weather");
 var forecastArray = [];
 var city = "";
+var date = moment().format('MMMM Do YYYY');
 
 const forecastUrl = new URL("https://api.openweathermap.org/data/2.5/forecast");
 forecastUrl.searchParams.append("q", city);
@@ -17,9 +18,23 @@ function getCity(event) {
     callAPI();
 }
 
-function displayData(data) {
+function displayCurrentData(data) {
     console.log(data);
-    current.text(KtoF(data.temp));
+    current.html(`
+        <div class="currentCard"> 
+            <h2> 
+                ${city} &nbsp; (${date})
+            </h2>
+            <p> Temperature: ${KtoF(data.temp)}&#176;F </p>
+            <p> Humidity: ${data.humidity}% </p>
+            <p> Wind Speed: ${data.windSpeed} MPH </p>
+            <p> UV Index: ${data.uvi} </p>
+        </div>`
+    );
+}
+
+function displayForecastData(data) {
+    console.log(data);
 }
 
 function callAPI() {
@@ -70,7 +85,19 @@ function callAPI() {
                     uvi: data.current.uvi,
                     icon: data.current.weather[0].icon
                 };
-                displayData(currentData);
+                var forecastData = [];
+                for (i = 1; i < 6; i++) {
+                    forecastData.push(
+                        {
+                            highTemp: data.daily[i].temp.max,
+                            lowTemp: data.daily[i].temp.min,
+                            humidity: data.daily[i].humidity,
+                            icon: data.daily[i].weather[0].icon
+                        }
+                    );
+                }
+                displayCurrentData(currentData);
+                displayForecastData(forecastData);
             });
 
         });
