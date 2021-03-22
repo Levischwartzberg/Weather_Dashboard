@@ -1,21 +1,32 @@
+body {
+    background-color: lightblue;
+}
+
 header {
-    background-image: linear-gradient(#06813a, #0fb950);
+    background-image: linear-gradient(#3ea0c7, #90c2df);
 }
 
 .search {
     background-color: #ebebeb;
     padding: 20px;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+#search {
+    background-image: linear-gradient(#73c4e4, #a8d1e9);
+    margin-left: 2px;
 }
 
 .currentCard {
     border: #8f8f8f solid 1px;
-    background-color: #c9f0fc;
+    background-image: linear-gradient(#3ea0c7, #90c2df);
     padding: 10px;
 }
 
 .forecastCard {
     border: #8f8f8f solid 1px;
-    background-color: #c9f0fc;
+    background-image: linear-gradient(#3ea0c7, #90c2df);
     padding: 10px;
 }
 
@@ -26,15 +37,15 @@ header {
 .city-button {
     border: #8f8f8f solid 1px;
     border-radius: 5px;
-    background-color: #c9f0fc;
+    background-image: linear-gradient(#73c4e4, #a8d1e9);
     display: block;
     padding: 10px;
     margin-top: 5px;
 }
 
 .low {
-    background-color: #066406;
-    border: #066406 solid 1px;
+    background-color: #079607;
+    border: #079607 solid 1px;
     border-radius: 5px;
 }
 
