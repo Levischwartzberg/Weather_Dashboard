@@ -9,16 +9,49 @@ header {
 
 .currentCard {
     border: #8f8f8f solid 1px;
-    background-color: #ebebeb;
+    background-color: #c9f0fc;
     padding: 10px;
 }
 
 .forecastCard {
     border: #8f8f8f solid 1px;
-    background-color: #ebebeb;
+    background-color: #c9f0fc;
     padding: 10px;
 }
 
 .forecast {
     padding: 15px;
+}
+
+.city-button {
+    border: #8f8f8f solid 1px;
+    border-radius: 5px;
+    background-color: #c9f0fc;
+    display: block;
+    padding: 10px;
+    margin-top: 5px;
+}
+
+.low {
+    background-color: #066406;
+    border: #066406 solid 1px;
+    border-radius: 5px;
+}
+
+.moderate {
+    background-color: #e0ee1a;
+    border: #e0ee1a solid 1px;
+    border-radius: 5px;
+}
+
+.high {
+    background-color: #dd9120;
+    border: #dd9120 solid 1px;
+    border-radius: 5px;
+}
+
+.very-high {
+    background-color: #ee300e;
+    border: #ee300e solid 1px;
+    border-radius: 5px;
 }

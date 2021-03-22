@@ -1,9 +1,11 @@
-var containerEl = $(".container");
+var containerEl = $(".container-fluid");
 var current = $(".current-weather");
 var forecast = $(".five-day-forecast");
 var forecastArray = [];
 var city = "";
 var date = moment().format('MMMM Do YYYY');
+var savedCities = $(".saved-cities");
+var cities = JSON.parse( localStorage.getItem("cities") ) || [];
 
 const forecastUrl = new URL("https://api.openweathermap.org/data/2.5/forecast");
 forecastUrl.searchParams.append("q", city);
@@ -11,11 +13,33 @@ forecastUrl.searchParams.append("appid", "938321dd3faa29575b4452961279be81");
 var cityLat = "";
 var cityLon = "";
 
-containerEl.on("click", "#search", getCity);
+containerEl.on("click", "#search", getCitySearch);
+containerEl.on("click", ".city-button", getCityButton)
+populateSaved();
 
-function getCity(event) {
+function populateSaved() {
+    for (i=0; i<cities.length; i++) {
+        let cityBtn = $("<div>");
+        savedCities.append(cityBtn);
+        cityBtn.html(`
+            <button class="city-button" id="${cities[i]}"> ${cities[i]} </button>
+        `)
+    }
+}
+
+function getCitySearch(event) {
     event.preventDefault();
     city = ( $(this).parent().children().eq(0) ).val(); 
+    city = capitalizeCity(city);
+    addCityButton(city);
+    callAPI();
+}
+
+function getCityButton(event) {
+    event.preventDefault();
+    city = $(this).attr("id"); 
+    console.log(city);
+    city = capitalizeCity(city);
     callAPI();
 }
 
@@ -29,7 +53,7 @@ function displayCurrentData(data) {
             <p> Temperature: ${KtoF(data.temp)}&#176;F </p>
             <p> Humidity: ${data.humidity}% </p>
             <p> Wind Speed: ${data.windSpeed} MPH </p>
-            <p> UV Index: ${data.uvi} </p>
+            <p> <span class="${uviWarning(data.uvi)}"> UV Index: ${data.uvi} </span> </p>
         </div>`
     );
 }
@@ -40,9 +64,9 @@ function displayForecastData(data) {
         let day = moment().add(i+1,"days").format('MMMM Do YYYY');
         forecast.children().children().eq(i).html(`
             <div class="forecastCard"> 
-                <h4> 
+                <h5> 
                     ${day}
-                </h4>
+                </h5>
                 <img src="http://openweathermap.org/img/wn/${data[i].icon}@2x.png">
                 <p> High: ${KtoF(data[i].highTemp)}&#176;F </p>
                 <p> Low: ${KtoF(data[i].lowTemp)}&#176;F </p>
@@ -118,6 +142,40 @@ function callAPI() {
         });
 }
 
+function addCityButton(city) {
+    if ( cities.includes(city) ) {
+        return;
+    }
+    else {
+        cities.push(city);
+        localStorage.setItem("cities", JSON.stringify(cities));
+        let cityBtn = $("<div>");
+        savedCities.append(cityBtn);
+        cityBtn.html(`
+            <button class="city-button" id="${city}"> ${city} </button>
+        `)
+    }
+}
+
+function capitalizeCity(city) {
+    return city.charAt(0).toUpperCase() + city.slice(1);
+  }
+
 function KtoF(num) {
     return ( (num - 273) * 9/5 + 32 ).toFixed(1);
+}
+
+function uviWarning(uvi) {
+    if (uvi <= 2) {
+        return "low";
+    }
+    else if (uvi <= 5) {
+        return "moderate";
+    }
+    else if (uvi <= 7) {
+        return "high";
+    }
+    else {
+        return "very-high";
+    }
 }
