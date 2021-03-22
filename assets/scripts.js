@@ -1,5 +1,6 @@
 var containerEl = $(".container");
 var current = $(".current-weather");
+var forecast = $(".five-day-forecast");
 var forecastArray = [];
 var city = "";
 var date = moment().format('MMMM Do YYYY');
@@ -23,7 +24,7 @@ function displayCurrentData(data) {
     current.html(`
         <div class="currentCard"> 
             <h2> 
-                ${city} &nbsp; (${date})
+                ${city} &nbsp; (${date}) &nbsp; <img src="http://openweathermap.org/img/wn/${data.icon}@2x.png">
             </h2>
             <p> Temperature: ${KtoF(data.temp)}&#176;F </p>
             <p> Humidity: ${data.humidity}% </p>
@@ -35,6 +36,20 @@ function displayCurrentData(data) {
 
 function displayForecastData(data) {
     console.log(data);
+    for (i = 0; i < data.length; i++) {
+        let day = moment().add(i+1,"days").format('MMMM Do YYYY');
+        forecast.children().children().eq(i).html(`
+            <div class="forecastCard"> 
+                <h4> 
+                    ${day}
+                </h4>
+                <img src="http://openweathermap.org/img/wn/${data[i].icon}@2x.png">
+                <p> High: ${KtoF(data[i].highTemp)}&#176;F </p>
+                <p> Low: ${KtoF(data[i].lowTemp)}&#176;F </p>
+                <p> Humidity: ${data[i].humidity}% </p>
+            </div>   
+        `)
+    }
 }
 
 function callAPI() {
