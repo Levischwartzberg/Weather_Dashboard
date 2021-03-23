@@ -1,7 +1,6 @@
 var containerEl = $(".container-fluid");
 var current = $(".current-weather");
 var forecast = $(".five-day-forecast");
-var forecastArray = [];
 var city = "";
 var date = moment().format('MMMM Do YYYY');
 var savedCities = $(".saved-cities");
@@ -17,6 +16,7 @@ containerEl.on("click", "#search", getCitySearch);
 containerEl.on("click", ".city-button", getCityButton)
 populateSaved();
 
+//This function loads pre saved cities as buttons
 function populateSaved() {
     for (i=0; i<cities.length; i++) {
         let cityBtn = $("<div>");
@@ -27,6 +27,7 @@ function populateSaved() {
     }
 }
 
+//This function displays city data when a new city is searched
 function getCitySearch(event) {
     event.preventDefault();
     city = ( $(this).parent().children().eq(0) ).val(); 
@@ -34,6 +35,7 @@ function getCitySearch(event) {
     callAPI();
 }
 
+//This function displays city data when the saved cities button is clicked
 function getCityButton(event) {
     event.preventDefault();
     city = $(this).attr("id"); 
@@ -42,6 +44,7 @@ function getCityButton(event) {
     callAPI();
 }
 
+//This function displays the current weather
 function displayCurrentData(data) {
     console.log(data);
     current.html(`
@@ -57,6 +60,7 @@ function displayCurrentData(data) {
     );
 }
 
+//This function displays the five day forecast data
 function displayForecastData(data) {
     console.log(data);
     for (i = 0; i < data.length; i++) {
@@ -75,6 +79,7 @@ function displayForecastData(data) {
     }
 }
 
+//This function calls a weather api based on city name and then looks in the more useful weather api based on coordinates from the first api
 function callAPI() {
     var forecastArray = [];
 
@@ -89,17 +94,12 @@ function callAPI() {
             return response.json();
         })
         .then(function (data) {
-            //console.log(data);
-            //console.log(data.list);
+                //console.log(data);
+                //console.log(data.list);
             for (i=0; i<data.list.length; i++) {
-                var maxTemp = data.list[i].main.temp_max;
-                var dateTime = data.list[i].dt_txt;
-                var pair = [dateTime, maxTemp];
-                forecastArray.push(pair);
                 cityLat = data.city.coord.lat;
                 cityLon = data.city.coord.lon;
             }
-            //console.log(forecastArray);
 
             const currentUrl = new URL("https://api.openweathermap.org/data/2.5/onecall");
             
@@ -142,6 +142,7 @@ function callAPI() {
         });
 }
 
+//This function adds a button with the city name if the city name is not already in the saved cities list
 function addCityButton(city) {
     if ( cities.includes(city) ) {
         return;
@@ -166,6 +167,7 @@ function KtoF(num) {
     return ( (num - 273) * 9/5 + 32 ).toFixed(1);
 }
 
+//returns a class name based on uvi ranges
 function uviWarning(uvi) {
     if (uvi <= 2) {
         return "low";
@@ -181,7 +183,8 @@ function uviWarning(uvi) {
     }
 }
 
-function handleRemoveItem(event) {
+//removes parent element of a close icon button
+function removeButton(event) {
     // convert button we pressed (`event.target`) to a jQuery DOM object
     var btnClicked = $(event.target);
     index = btnClicked.attr("id");
@@ -193,5 +196,5 @@ function handleRemoveItem(event) {
 
   }
 
-  savedCities.on('click', '.delete-item-btn', handleRemoveItem);
+  savedCities.on('click', '.delete-item-btn', removeButton);
 
