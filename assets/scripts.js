@@ -22,8 +22,8 @@ function populateSaved() {
         let cityBtn = $("<div>");
         savedCities.append(cityBtn);
         cityBtn.html(`
-            <button class="city-button" id="${cities[i]}"> ${cities[i]} </button>
-        `)
+            <button class="city-button" id="${cities[i]}"> ${cities[i]} &nbsp; &nbsp; <span id="${i}" class="delete-item-btn"> x </span> </button>
+        `)    
     }
 }
 
@@ -31,7 +31,6 @@ function getCitySearch(event) {
     event.preventDefault();
     city = ( $(this).parent().children().eq(0) ).val(); 
     city = capitalizeCity(city);
-    addCityButton(city);
     callAPI();
 }
 
@@ -103,7 +102,7 @@ function callAPI() {
             //console.log(forecastArray);
 
             const currentUrl = new URL("https://api.openweathermap.org/data/2.5/onecall");
-            //?lat={lat}&lon={lon}&exclude={part}&appid={API key}"
+            
             currentUrl.searchParams.append("lat", cityLat);
             currentUrl.searchParams.append("lon", cityLon);
             currentUrl.searchParams.append("exclude", "minutely,hourly,alerts");
@@ -137,6 +136,7 @@ function callAPI() {
                 }
                 displayCurrentData(currentData);
                 displayForecastData(forecastData);
+                addCityButton(city);
             });
 
         });
@@ -150,9 +150,10 @@ function addCityButton(city) {
         cities.push(city);
         localStorage.setItem("cities", JSON.stringify(cities));
         let cityBtn = $("<div>");
+        index = cities.length - 1;
         savedCities.append(cityBtn);
         cityBtn.html(`
-            <button class="city-button" id="${city}"> ${city} </button>
+            <button class="city-button" id="${city}"> ${city} &nbsp; &nbsp; <span id="${index}" class="delete-item-btn"> x </span> </button>
         `)
     }
 }
@@ -179,3 +180,18 @@ function uviWarning(uvi) {
         return "very-high";
     }
 }
+
+function handleRemoveItem(event) {
+    // convert button we pressed (`event.target`) to a jQuery DOM object
+    var btnClicked = $(event.target);
+    index = btnClicked.attr("id");
+    cities.splice(index, 1);
+    localStorage.setItem("cities", JSON.stringify(cities));
+  
+    // get the parent `<li>` element from the button we pressed and remove it
+    btnClicked.parent('button').remove();
+
+  }
+
+  savedCities.on('click', '.delete-item-btn', handleRemoveItem);
+
